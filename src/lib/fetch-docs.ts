@@ -76,6 +76,11 @@ async function loadDocsPageFromRelativeFilePath(
   const content: MDXRemoteSerializeResult = await serialize(
     mdxFileContent.content,
     {
+      // next-mdx-remote v6 blocks JS expressions by default. Our docs use
+      // trusted MDX expressions, so keep JS enabled while retaining the
+      // dangerous-global protections introduced in v6.
+      blockJS: false,
+      blockDangerousJS: true,
       mdxOptions: {
         remarkPlugins: [
           remarkGfm,
