@@ -43,7 +43,7 @@ export default function Terminal({
     if (position < 100) {
       setAutoScroll(false);
     }
-    if (position == 100) {
+    if (position === 100) {
       setAutoScroll(true);
     }
   };

@@ -47,7 +47,12 @@ export default function DonateCard({
               <Heart className={s.buttonIcon} />
               {buttonText}
             </Link>
-            <button onClick={copyEin} className={s.einButton} title="Copy EIN">
+            <button
+              type="button"
+              onClick={copyEin}
+              className={s.einButton}
+              title="Copy EIN"
+            >
               <span className={s.einText}>
                 <span className={s.einLabel}>EIN:</span>
                 <span className={s.einValue}>{ein}</span>

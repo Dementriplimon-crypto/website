@@ -39,6 +39,7 @@ export default function ScrollToTopButton() {
   return (
     showScrollToTopButton && (
       <button
+        type="button"
         ref={setScrollToTopButtonRef}
         className={classNames(s.scrollToTopButton, {
           [s.isAtBottom]: isAtBottom,

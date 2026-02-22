@@ -24,11 +24,17 @@ interface TagListProps {
 }
 
 export default function TagList({ tags }: TagListProps) {
+  const keyCounts = new Map<string, number>();
+
   return (
     <ul className={s.tagList}>
-      {tags.map(({ name, color }, index) => (
-        <Tag key={`${name}_${index}`} name={name} color={color} />
-      ))}
+      {tags.map(({ name, color }) => {
+        const baseKey = `${name}_${color ?? "none"}`;
+        const count = (keyCounts.get(baseKey) ?? 0) + 1;
+        keyCounts.set(baseKey, count);
+
+        return <Tag key={`${baseKey}_${count}`} name={name} color={color} />;
+      })}
     </ul>
   );
 }

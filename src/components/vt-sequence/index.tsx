@@ -20,6 +20,8 @@ export default function VTSequence({
   unimplemented = false,
 }: VTSequenceProps) {
   const sequenceElements = useMemo(() => parseSequence(sequence), [sequence]);
+  const keyCounts = new Map<string, number>();
+
   return (
     <div className={s.vtsequence}>
       {unimplemented && (
@@ -29,19 +31,25 @@ export default function VTSequence({
         </div>
       )}
       <ol className={s.sequence}>
-        {sequenceElements.map(({ value, hex }, i) => (
-          <li
-            key={i}
-            className={classNames(s.vtelem, {
-              [s.parameter]: hex == null,
-            })}
-          >
-            <dl>
-              <dt>{hex ? hex : "____"}</dt>
-              <dd>{value}</dd>
-            </dl>
-          </li>
-        ))}
+        {sequenceElements.map(({ value, hex }) => {
+          const baseKey = `${value}:${hex ?? "parameter"}`;
+          const count = (keyCounts.get(baseKey) ?? 0) + 1;
+          keyCounts.set(baseKey, count);
+
+          return (
+            <li
+              key={`${baseKey}:${count}`}
+              className={classNames(s.vtelem, {
+                [s.parameter]: hex == null,
+              })}
+            >
+              <dl>
+                <dt>{hex ? hex : "____"}</dt>
+                <dd>{value}</dd>
+              </dl>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );

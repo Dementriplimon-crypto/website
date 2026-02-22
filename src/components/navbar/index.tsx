@@ -102,7 +102,7 @@ export default function Navbar({
                   <li key={link.text}>
                     <Link
                       className={classNames({
-                        [s.active]: pathname == link.href,
+                        [s.active]: pathname === link.href,
                       })}
                       {...link}
                     />
@@ -153,7 +153,7 @@ export default function Navbar({
                 // special treatment in the next node group below.
                 ...(links
                   ? links
-                      .filter((link) => link.href != "/docs")
+                      .filter((link) => link.href !== "/docs")
                       .map((link) => {
                         return {
                           type: "link",

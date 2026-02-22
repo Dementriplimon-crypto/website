@@ -35,9 +35,9 @@ export default function TerminalCardsSection({
         <P className={s.description}>{description}</P>
       </div>
       <ul className={s.cards}>
-        {cards.map((card, i) => {
+        {cards.map((card) => {
           return (
-            <li key={i}>
+            <li key={card.title}>
               <div className={s.terminalWrapper}>
                 <Terminal
                   className={s.terminal}

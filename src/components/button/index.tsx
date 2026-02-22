@@ -27,6 +27,7 @@ function Button(
 ) {
   return (
     <button
+      type="button"
       ref={ref}
       onClick={onClick}
       onBlur={onBlur}

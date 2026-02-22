@@ -1,11 +1,11 @@
 import { ReactElement } from "react";
 import GitHub from "./index";
 
-function isReactElement(children: any): children is ReactElement<any> {
-  return children && typeof children === "object" && "props" in children;
+function isReactElement(children: unknown): children is ReactElement {
+  return !!children && typeof children === "object" && "props" in children;
 }
 
-export function processGitHubLinks(children: any): any {
+export function processGitHubLinks(children: React.ReactNode): React.ReactNode {
   if (typeof children === "string") {
     const ghPattern = /GH-(\d+)/g;
     const parts = children.split(ghPattern);
@@ -17,7 +17,7 @@ export function processGitHubLinks(children: any): any {
       if (i % 2 === 0) {
         if (parts[i]) result.push(parts[i]);
       } else {
-        result.push(<GitHub key={`gh-${i}`} number={parseInt(parts[i])} />);
+        result.push(<GitHub key={`gh-${i}`} number={parseInt(parts[i], 10)} />);
       }
     }
 

@@ -45,6 +45,7 @@ const Text = forwardRef<HTMLElement, TextProps>(function Text(
   return (
     <Tag
       id={id}
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic intrinsic tag refs need an escape hatch for the union tag type.
       ref={ref as any}
       onScroll={onScroll}
       className={classNames(s.text, className, {

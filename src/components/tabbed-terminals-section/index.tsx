@@ -39,12 +39,15 @@ export default function TabbedTerminalsSection({
                   className={classNames({
                     [s.active]: isActiveTab,
                   })}
-                  onClick={() => setActiveTabIndex(i)}
                 >
-                  <div className={s.header}>
+                  <button
+                    type="button"
+                    className={s.header}
+                    onClick={() => setActiveTabIndex(i)}
+                  >
                     <H4>{tab.title}</H4>
                     <ChevronDown size={16} />
-                  </div>
+                  </button>
                   {isActiveTab && (
                     <div className={s.tabContent}>
                       <Terminal

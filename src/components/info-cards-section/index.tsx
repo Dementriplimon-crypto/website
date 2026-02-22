@@ -25,9 +25,9 @@ export default function InfoCardsSection({
     <SectionWrapper className={classNames(s.infoCardsSection, className)}>
       <H1 className={s.sectionTitle}>{title}</H1>
       <ul className={s.infoCards}>
-        {infoCards.map((infoCard, i) => {
+        {infoCards.map((infoCard) => {
           return (
-            <li key={i}>
+            <li key={infoCard.title}>
               <div className={s.iconContainer}>{infoCard.icon}</div>
               <H3>{infoCard.title}</H3>
               <P>{infoCard.description}</P>

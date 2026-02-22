@@ -107,7 +107,7 @@ async function loadDocsPageFromRelativeFilePath(
     editOnGithubLink: mdxFileContent.data.editOnGithubLink
       ? mdxFileContent.data.editOnGithubLink
       : null,
-    hideSidecar: mdxFileContent.data.hasOwnProperty("hideSidecar")
+    hideSidecar: Object.hasOwn(mdxFileContent.data, "hideSidecar")
       ? mdxFileContent.data.hideSidecar
       : false,
     content,
@@ -154,7 +154,9 @@ function parseAnchorLinks({
       type: string;
       value: string;
     }[];
-    data?: any;
+    data?: {
+      hProperties?: Record<string, unknown>;
+    };
   };
 
   return () => {
@@ -240,7 +242,7 @@ To fix this error, delete one of these files.`,
 }
 
 const isErrorWithCode = (err: unknown): err is Error & { code: unknown } => {
-  return err instanceof Error && "code" in (err as any);
+  return err instanceof Error && typeof err === "object" && "code" in err;
 };
 
 function slugFromRelativeFilePath(relativeFilePath: string): string {
