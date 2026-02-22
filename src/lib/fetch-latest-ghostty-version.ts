@@ -1,4 +1,17 @@
-import { parseStringPromise } from "xml2js";
+import { XMLParser } from "fast-xml-parser";
+
+type AppcastItem = {
+  "sparkle:version": string;
+  "sparkle:shortVersionString": string;
+};
+
+type Appcast = {
+  rss?: {
+    channel?: {
+      item?: AppcastItem | AppcastItem[];
+    };
+  };
+};
 
 export async function fetchLatestGhosttyVersion(): Promise<string> {
   // Use the same appcast we use for Sparkle updates to get the
@@ -10,12 +23,15 @@ export async function fetchLatestGhosttyVersion(): Promise<string> {
   }
 
   const xmlContent = await response.text();
-  const parsedXml = await parseStringPromise(xmlContent, {
-    explicitArray: false,
+  const parser = new XMLParser({
+    ignoreAttributes: false,
   });
+  const parsedXml = parser.parse(xmlContent) as Appcast;
 
-  // Extract items
-  const items = parsedXml.rss.channel.item;
+  const items = parsedXml.rss?.channel?.item;
+  if (!items) {
+    throw new Error("Failed to parse appcast XML: no items found");
+  }
 
   // Convert items to an array if it's not already
   const itemsArray = Array.isArray(items) ? items : [items];

@@ -1,8 +1,8 @@
 import remarkCallout, {
   type Options as RemarkCalloutOptions,
 } from "@r4ai/remark-callout";
+import { promises as fs } from "node:fs";
 import matter from "gray-matter";
-import recurse, { type Item } from "klaw-sync";
 import type { Root } from "mdast";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
@@ -209,15 +209,9 @@ function parseAnchorLinks({
 export async function loadAllDocsPageSlugs(
   docsDirectory: string,
 ): Promise<Array<string>> {
-  const allPaths = recurse(docsDirectory, {
-    nodir: true,
-    filter: (file: Item): boolean => {
-      return file.path.endsWith(MDX_EXTENSION);
-    },
-    traverseAll: true,
-  }).map((item: recurse.Item) => {
-    return item.path;
-  });
+  const allPaths = (await collectAllFilesRecursively(docsDirectory)).filter(
+    (path) => path.endsWith(MDX_EXTENSION),
+  );
   const docsPageSlugs: Set<string> = new Set();
   for (let i = 0; i < allPaths.length; i++) {
     const path = allPaths[i];
@@ -252,4 +246,20 @@ function slugFromRelativeFilePath(relativeFilePath: string): string {
       // Include support for index files (`/docs/topic/index.mdx` -> `topic`)
       .replaceAll(/\/index$/gi, "")
   );
+}
+
+async function collectAllFilesRecursively(root: string): Promise<string[]> {
+  const files: string[] = [];
+  const entries = await fs.readdir(root, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = nodePath.join(root, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await collectAllFilesRecursively(fullPath)));
+      continue;
+    }
+    files.push(fullPath);
+  }
+
+  return files;
 }

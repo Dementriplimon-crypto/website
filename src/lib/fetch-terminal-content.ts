@@ -1,5 +1,4 @@
 import { promises as fs } from "node:fs";
-import recurse, { type Item } from "klaw-sync";
 const nodePath = require("node:path");
 
 const TERMINALS_DIRECTORY = "./terminals";
@@ -10,15 +9,9 @@ export type TerminalsMap = { [k: string]: string[] };
 export async function loadAllTerminalFiles(
   subdirectory?: string,
 ): Promise<TerminalsMap> {
-  const allPaths = recurse(`${TERMINALS_DIRECTORY}${subdirectory}`, {
-    nodir: true,
-    filter: (file: Item): boolean => {
-      return file.path.endsWith(TERMINAL_CONTENT_FILE_EXTENSION);
-    },
-    traverseAll: true,
-  }).map((item: recurse.Item) => {
-    return item.path;
-  });
+  const allPaths = (
+    await collectAllFilesRecursively(`${TERMINALS_DIRECTORY}${subdirectory}`)
+  ).filter((path) => path.endsWith(TERMINAL_CONTENT_FILE_EXTENSION));
 
   const map: Map<string, Array<string>> = new Map<string, Array<string>>();
   for (const path of allPaths) {
@@ -34,4 +27,20 @@ export async function loadAllTerminalFiles(
     map.set(slug, content);
   }
   return Object.fromEntries(map);
+}
+
+async function collectAllFilesRecursively(root: string): Promise<string[]> {
+  const files: string[] = [];
+  const entries = await fs.readdir(root, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = nodePath.join(root, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await collectAllFilesRecursively(fullPath)));
+      continue;
+    }
+    files.push(fullPath);
+  }
+
+  return files;
 }

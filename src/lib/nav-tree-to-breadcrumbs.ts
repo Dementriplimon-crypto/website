@@ -24,8 +24,6 @@ export function navTreeToBreadcrumbs(
 
   // Go through each URL segment & determine the breadcrumb to push to our array
   while (segments.length) {
-    const currentSegment = segments[0];
-
     // Find the Node which represents the URL segment we're on
     const nextNode: FolderNode | LinkNode | undefined = currentNavTree.find(
       (node) => {
@@ -39,7 +37,7 @@ export function navTreeToBreadcrumbs(
     ) as FolderNode | LinkNode | undefined;
 
     if (typeof nextNode === "undefined") {
-      segments.map((name) => {
+      segments.forEach((name) => {
         accumulatedPath += `/${name}`; // Accumulate the path with the current segment
         breadcrumbs.push({
           text: name, // Use segment (file name) as the breadcrumb title
