@@ -2,7 +2,7 @@ import Footer from "@/components/footer";
 import type { SimpleLink } from "@/components/link";
 import type { NavTreeNode } from "@/components/nav-tree";
 import Navbar from "@/components/navbar";
-import RootLayout, { type RootLayoutProps } from "../root-layout";
+import RootLayout from "../root-layout";
 
 const navLinks: Array<SimpleLink> = [
   {
@@ -19,16 +19,17 @@ const navLinks: Array<SimpleLink> = [
   },
 ];
 
-type NavFooterLayoutProps = RootLayoutProps & {
+type NavFooterLayoutProps = {
+  children?: React.ReactNode;
   docsNavTree: NavTreeNode[];
 };
 
 export default function NavFooterLayout(props: NavFooterLayoutProps) {
   const currentYear = new Date().getFullYear();
 
-  const { children, docsNavTree, ...otherProps } = props;
+  const { children, docsNavTree } = props;
   return (
-    <RootLayout {...otherProps}>
+    <RootLayout>
       <Navbar
         links={navLinks}
         docsNavTree={docsNavTree}

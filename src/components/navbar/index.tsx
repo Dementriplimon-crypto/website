@@ -1,4 +1,5 @@
-import { DOCS_PAGES_ROOT_PATH } from "@/pages/docs/[...path]";
+"use client";
+
 import classNames from "classnames";
 import Image from "next/image";
 import NextLink from "next/link";
@@ -13,7 +14,8 @@ import NavTree, {
 } from "../nav-tree";
 import GhosttyWordmark from "./ghostty-wordmark.svg";
 import s from "./Navbar.module.css";
-import { useRouter } from "next/router";
+
+const DOCS_PAGES_ROOT_PATH = "/docs";
 
 export interface NavbarProps {
   className?: string;
@@ -31,7 +33,6 @@ export default function Navbar({
   docsNavTree,
 }: NavbarProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileContentRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLLIElement>(null);
@@ -75,19 +76,12 @@ export default function Navbar({
     }
   }, [mobileMenuOpen]);
 
-  /* Instead of closing the menu with the NavTree's onNavLinkClicked prop,
-   * we'll close it when the route changes. This avoids the annoying flicker
-   * between the old and new pages when the menu closes. */
+  // Close the mobile menu when navigation changes the pathname.
   useEffect(() => {
-    const handleRouteChangeComplete = () => {
+    if (mobileMenuOpen) {
       setMobileMenuOpen(false);
-    };
-
-    router.events.on("routeChangeComplete", handleRouteChangeComplete);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChangeComplete);
-    };
-  }, [router]);
+    }
+  }, [pathname, mobileMenuOpen]);
 
   return (
     <nav className={classNames(s.navbar, className)}>

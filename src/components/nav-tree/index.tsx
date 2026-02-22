@@ -1,3 +1,5 @@
+"use client";
+
 import classNames from "classnames";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";

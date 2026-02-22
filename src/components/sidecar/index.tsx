@@ -1,3 +1,5 @@
+"use client";
+
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import classNames from "classnames";

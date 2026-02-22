@@ -66,7 +66,11 @@ const special: Record<string, number> = {
 };
 
 function parseSequence(sequence: string | string[]) {
-  const sequenceArray = typeof sequence === "string" ? [sequence] : sequence;
+  if (!sequence) {
+    return [];
+  }
+
+  const sequenceArray = Array.isArray(sequence) ? [...sequence] : [sequence];
 
   if (sequenceArray[0] === "CSI") {
     sequenceArray.shift();

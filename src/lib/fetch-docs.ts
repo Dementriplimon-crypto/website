@@ -4,11 +4,12 @@ import remarkCallout, {
 import { promises as fs } from "node:fs";
 import matter from "gray-matter";
 import type { Root } from "mdast";
-import type { MDXRemoteSerializeResult } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
+import { compileMDX } from "next-mdx-remote/rsc";
+import type { ReactNode } from "react";
 import rehypeHighlight, {
   type Options as RehypeHighlightOptions,
 } from "rehype-highlight";
+import { mdxComponents } from "./mdx-components";
 import { all } from "lowlight";
 import remarkGfm from "remark-gfm";
 import slugify from "slugify";
@@ -35,7 +36,7 @@ export interface DocsPageData {
   // frontmatter that can override the link.
   editOnGithubLink: string | null;
   hideSidecar: boolean;
-  content: MDXRemoteSerializeResult;
+  content: ReactNode;
   relativeFilePath: string;
   pageHeaders: PageHeader[];
 }
@@ -73,9 +74,10 @@ async function loadDocsPageFromRelativeFilePath(
 
   const pageHeaders: PageHeader[] = [];
 
-  const content: MDXRemoteSerializeResult = await serialize(
-    mdxFileContent.content,
-    {
+  const { content } = await compileMDX({
+    source: mdxFileContent.content,
+    components: mdxComponents,
+    options: {
       // next-mdx-remote v6 blocks JS expressions by default. Our docs use
       // trusted MDX expressions, so keep JS enabled while retaining the
       // dangerous-global protections introduced in v6.
@@ -98,7 +100,7 @@ async function loadDocsPageFromRelativeFilePath(
         ],
       },
     },
-  );
+  });
   return {
     slug,
     relativeFilePath,
@@ -193,6 +195,14 @@ function parseAnchorLinks({
             }
             const resolvedID =
               encounteredCount >= 2 ? `${baseId}-${encounteredCount}` : baseId;
+
+            if (!headingNode.data) {
+              headingNode.data = {};
+            }
+            headingNode.data.hProperties = {
+              ...headingNode.data.hProperties,
+              id: resolvedID,
+            };
 
             pageHeaders.push({
               depth: headingNode.depth,

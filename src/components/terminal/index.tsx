@@ -1,3 +1,5 @@
+"use client";
+
 import classNames from "classnames";
 import type React from "react";
 import { type UIEvent, useEffect, useRef, useState } from "react";

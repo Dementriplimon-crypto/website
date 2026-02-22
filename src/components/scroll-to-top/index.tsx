@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import s from "./ScrollToTop.module.css";

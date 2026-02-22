@@ -17,7 +17,7 @@ export async function fetchLatestGhosttyVersion(): Promise<string> {
   // Use the same appcast we use for Sparkle updates to get the
   // latest version of the app.
   const appcastUrl = "https://release.files.ghostty.org/appcast.xml";
-  const response = await fetch(appcastUrl);
+  const response = await fetch(appcastUrl, { cache: "force-cache" });
   if (!response.ok) {
     throw new Error(`Failed to fetch XML: ${response.statusText}`);
   }
