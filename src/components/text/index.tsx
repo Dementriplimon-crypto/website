@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 
 import { JetBrains_Mono } from "next/font/google";
 
-import { forwardRef, UIEventHandler } from "react";
+import { forwardRef, type UIEventHandler } from "react";
 import s from "./Text.module.css";
 
 // https://github.com/orioncactus/pretendard/tree/main/packages/pretendard-std
@@ -45,6 +45,7 @@ const Text = forwardRef<HTMLElement, TextProps>(function Text(
   return (
     <Tag
       id={id}
+      // biome-ignore lint/suspicious/noExplicitAny: dynamic intrinsic tag refs need an escape hatch for the union tag type.
       ref={ref as any}
       onScroll={onScroll}
       className={classNames(s.text, className, {

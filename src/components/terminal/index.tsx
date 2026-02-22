@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import React, { UIEvent, useEffect, useRef, useState } from "react";
+import type React from "react";
+import { type UIEvent, useEffect, useRef, useState } from "react";
 import { Code, P } from "../text";
 import s from "./Terminal.module.css";
 
@@ -43,7 +44,7 @@ export default function Terminal({
     if (position < 100) {
       setAutoScroll(false);
     }
-    if (position == 100) {
+    if (position === 100) {
       setAutoScroll(true);
     }
   };

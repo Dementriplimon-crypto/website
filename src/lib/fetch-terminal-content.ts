@@ -1,6 +1,6 @@
-import { promises as fs } from "fs";
-import recurse, { Item } from "klaw-sync";
-const nodePath = require("path");
+import { promises as fs } from "node:fs";
+import recurse, { type Item } from "klaw-sync";
+const nodePath = require("node:path");
 
 const TERMINALS_DIRECTORY = "./terminals";
 const TERMINAL_CONTENT_FILE_EXTENSION = ".txt";
@@ -20,14 +20,14 @@ export async function loadAllTerminalFiles(
     return item.path;
   });
 
-  var map: Map<string, Array<string>> = new Map<string, Array<string>>();
+  const map: Map<string, Array<string>> = new Map<string, Array<string>>();
   for (const path of allPaths) {
     const slug = nodePath
       .relative(TERMINALS_DIRECTORY, path)
       .split(".")
       .slice(0, -1)
       .join(".");
-    var content = (await fs.readFile(path, "utf8")).split(/\n/g);
+    let content = (await fs.readFile(path, "utf8")).split(/\n/g);
     if (content[content.length - 1] === "") {
       content = content.slice(0, -1);
     }

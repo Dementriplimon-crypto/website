@@ -1,12 +1,12 @@
-import Breadcrumbs, { Breadcrumb } from "@/components/breadcrumbs";
+import Breadcrumbs, { type Breadcrumb } from "@/components/breadcrumbs";
 import CustomMDX from "@/components/custom-mdx";
-import NavTree, { NavTreeNode } from "@/components/nav-tree";
+import NavTree, { type NavTreeNode } from "@/components/nav-tree";
 import ScrollToTopButton from "@/components/scroll-to-top";
 import Sidecar from "@/components/sidecar";
 import { H1, P } from "@/components/text";
 import NavFooterLayout from "@/layouts/nav-footer-layout";
 import {
-  DocsPageData,
+  type DocsPageData,
   loadAllDocsPageSlugs,
   loadDocsPage,
 } from "@/lib/fetch-docs";

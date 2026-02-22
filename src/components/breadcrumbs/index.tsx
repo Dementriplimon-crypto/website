@@ -25,7 +25,7 @@ export default function Breadcrumbs({
           {breadcrumb.href ? (
             <Link
               className={classNames({
-                [s.active]: i + 1 == breadcrumbs.length,
+                [s.active]: i + 1 === breadcrumbs.length,
               })}
               href={breadcrumb.href}
               text={breadcrumb.text}

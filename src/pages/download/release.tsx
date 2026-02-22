@@ -2,7 +2,7 @@ import { ButtonLink } from "@/components/link";
 import GenericCard from "@/components/generic-card";
 import { CodeXml, Download, Package } from "lucide-react";
 import s from "./DownloadPage.module.css";
-import { DownloadPageProps } from "./index";
+import type { DownloadPageProps } from "./index";
 
 export default function ReleaseDownloadPage({
   latestVersion,

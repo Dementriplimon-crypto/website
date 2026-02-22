@@ -22,7 +22,7 @@ jobs:
       - name: alejandra check
         run: nix develop -c alejandra --check .
 
-  prettier:
+  biome:
     runs-on: namespace-profile-ghostty-sm
     timeout-minutes: 60
     steps:
@@ -37,5 +37,5 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: npm install
         run: nix develop -c npm install
-      - name: prettier check
-        run: nix develop -c npm exec -- prettier --check 'src/**/*.ts'
+      - name: biome check
+        run: nix develop -c npm run lint

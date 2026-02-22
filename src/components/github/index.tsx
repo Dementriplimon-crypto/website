@@ -6,13 +6,11 @@ interface GitHubProps {
   number: number;
 }
 
-export default function GitHub({
-  number,
-}: GitHubProps) {
+export default function GitHub({ number }: GitHubProps) {
   return (
-    <Link 
-      href={`https://github.com/ghostty-org/ghostty/issues/${number}`} 
-      text={`#${number}`} 
+    <Link
+      href={`https://github.com/ghostty-org/ghostty/issues/${number}`}
+      text={`#${number}`}
       showExternalIcon={false}
       className={s.github}
     />

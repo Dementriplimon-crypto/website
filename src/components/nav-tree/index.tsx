@@ -47,10 +47,10 @@ export default function NavTree({
 }: NavTreeProps) {
   return (
     <div className={classNames(s.navTree, className)}>
-      {nodeGroups.map(({ rootPath, nodes }, i) => {
+      {nodeGroups.map(({ rootPath, nodes }) => {
         return (
           <NavTreeNodesList
-            key={i}
+            key={rootPath}
             path={rootPath}
             nodes={nodes}
             onNavLinkClicked={onNavLinkClicked}
@@ -62,14 +62,14 @@ export default function NavTree({
   );
 }
 
-function navTreeNodeKey(node: NavTreeNode, index: number): string {
+function navTreeNodeKey(node: NavTreeNode, path: string): string {
   switch (node.type) {
     case "folder":
-      return `folder:${index}${node.path}${node.open}`;
+      return `folder:${path}${node.path}`;
     case "link":
-      return `link:${index}${node.path}${node.active}`;
+      return `link:${path}${node.path}`;
     case "break":
-      return `break:${index}`;
+      return `break:${path}`;
   }
 }
 
@@ -86,19 +86,25 @@ function NavTreeNodesList({
   onNavLinkClicked,
   activeItemRef,
 }: NavTreeNodesListProps) {
+  const keyCounts = new Map<string, number>();
+
   return (
     <ul className={s.nodesList}>
-      {nodes.map((node, i) => {
+      {nodes.map((node) => {
+        const baseKey = navTreeNodeKey(node, path);
+        const count = (keyCounts.get(baseKey) ?? 0) + 1;
+        keyCounts.set(baseKey, count);
+
         return (
           <li
-            key={navTreeNodeKey(node, i)}
+            key={`${baseKey}:${count}`}
             ref={node.type === "link" && node.active ? activeItemRef : null}
           >
             <Node
               path={path}
               node={node}
               onLinkNodeClicked={() => {
-                onNavLinkClicked && onNavLinkClicked();
+                onNavLinkClicked?.();
               }}
               activeItemRef={activeItemRef}
             />
@@ -133,7 +139,7 @@ function Node({ path, node, onLinkNodeClicked, activeItemRef }: NodeProps) {
           path={path}
           node={node}
           onClick={(e) => {
-            onLinkNodeClicked && onLinkNodeClicked();
+            onLinkNodeClicked?.();
           }}
         />
       );
@@ -142,8 +148,8 @@ function Node({ path, node, onLinkNodeClicked, activeItemRef }: NodeProps) {
     default:
       throw new Error(
         `Encountered an unexpected node type at ${path} \n\n ${JSON.stringify(
-          node
-        )}`
+          node,
+        )}`,
       );
   }
 }
@@ -163,10 +169,10 @@ function FolderNode({
   onLinkNodeClicked?: () => void;
   activeItemRef?: React.RefObject<HTMLLIElement | null>;
 }) {
-  var [open, setOpen] = useState(node.open ? true : false);
+  const [open, setOpen] = useState(!!node.open);
   return (
     <div className={classNames(s.folderNode, { [s.isOpen]: open })}>
-      <button onClick={() => setOpen(!open)}>
+      <button type="button" onClick={() => setOpen(!open)}>
         {node.title}
         <ChevronDown size={16} />
       </button>

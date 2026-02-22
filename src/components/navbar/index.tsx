@@ -5,8 +5,12 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import GridContainer, { NavAndFooterGridConfig } from "../grid-container";
-import Link, { ButtonLink, SimpleLink } from "../link";
-import NavTree, { BreakNode, LinkNode, NavTreeNode } from "../nav-tree";
+import Link, { ButtonLink, type SimpleLink } from "../link";
+import NavTree, {
+  type BreakNode,
+  type LinkNode,
+  type NavTreeNode,
+} from "../nav-tree";
 import GhosttyWordmark from "./ghostty-wordmark.svg";
 import s from "./Navbar.module.css";
 import { useRouter } from "next/router";
@@ -72,8 +76,8 @@ export default function Navbar({
   }, [mobileMenuOpen]);
 
   /* Instead of closing the menu with the NavTree's onNavLinkClicked prop,
-    * we'll close it when the route changes. This avoids the annoying flicker
-    * between the old and new pages when the menu closes. */
+   * we'll close it when the route changes. This avoids the annoying flicker
+   * between the old and new pages when the menu closes. */
   useEffect(() => {
     const handleRouteChangeComplete = () => {
       setMobileMenuOpen(false);
@@ -102,7 +106,7 @@ export default function Navbar({
                   <li key={link.text}>
                     <Link
                       className={classNames({
-                        [s.active]: pathname == link.href,
+                        [s.active]: pathname === link.href,
                       })}
                       {...link}
                     />
@@ -153,7 +157,7 @@ export default function Navbar({
                 // special treatment in the next node group below.
                 ...(links
                   ? links
-                      .filter((link) => link.href != "/docs")
+                      .filter((link) => link.href !== "/docs")
                       .map((link) => {
                         return {
                           type: "link",
@@ -189,9 +193,9 @@ function MenuToggle({ isOpen, onToggle }: MenuToggleProps) {
   return (
     <button type="button" onClick={onToggle} className={s.menuToggle}>
       <div className={classNames(s.hamburger)} data-open={isOpen}>
-        <div className={s.hamburgerLayer}></div>
-        <div className={s.hamburgerLayer}></div>
-        <div className={s.hamburgerLayer}></div>
+        <div className={s.hamburgerLayer} />
+        <div className={s.hamburgerLayer} />
+        <div className={s.hamburgerLayer} />
       </div>
     </button>
   );

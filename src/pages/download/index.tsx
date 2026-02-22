@@ -1,4 +1,4 @@
-import { NavTreeNode } from "@/components/nav-tree";
+import type { NavTreeNode } from "@/components/nav-tree";
 import SectionWrapper from "@/components/section-wrapper";
 import { H1, P } from "@/components/text";
 import NavFooterLayout from "@/layouts/nav-footer-layout";
@@ -49,10 +49,7 @@ export default function DownloadPage({
               <P weight="regular" className={s.versionInfo}>
                 Version {latestVersion} -{" "}
                 <a
-                  href={
-                    "/docs/install/release-notes/" +
-                    latestVersion.replace(/\./g, "-")
-                  }
+                  href={`/docs/install/release-notes/${latestVersion.replace(/\./g, "-")}`}
                 >
                   Release Notes
                 </a>

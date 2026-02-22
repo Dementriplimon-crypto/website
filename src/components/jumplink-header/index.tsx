@@ -4,7 +4,7 @@ import slugify from "slugify";
 import Text from "../text";
 import s from "./JumplinkHeader.module.css";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { isValidElement, useEffect, useState } from "react";
 import { useStore } from "@/lib/use-store";
 
 interface JumplinkHeaderProps {
@@ -80,12 +80,10 @@ export default function JumplinkHeader({
     } else if (Array.isArray(child)) {
       child.forEach(extractText);
     } else if (
-      typeof child === "object" &&
-      child !== null &&
-      "props" in child &&
-      typeof (child as any).props?.children !== "undefined"
+      isValidElement<{ children?: React.ReactNode }>(child) &&
+      child.props.children !== undefined
     ) {
-      extractText((child as any).props.children);
+      extractText(child.props.children);
     }
   };
 

@@ -22,8 +22,8 @@ export async function fetchLatestGhosttyVersion(): Promise<string> {
 
   // Find the item with the highest version
   const latestItem = itemsArray.reduce((maxItem, currentItem) => {
-    const currentVersion = parseInt(currentItem["sparkle:version"], 10);
-    const maxVersion = parseInt(maxItem["sparkle:version"], 10);
+    const currentVersion = Number.parseInt(currentItem["sparkle:version"], 10);
+    const maxVersion = Number.parseInt(maxItem["sparkle:version"], 10);
     return currentVersion > maxVersion ? currentItem : maxItem;
   });
 

@@ -1,4 +1,4 @@
-import { SpacingProp } from "@/types/style";
+import type { SpacingProp } from "@/types/style";
 import { H2, P } from "../text";
 import s from "./GenericCard.module.css";
 

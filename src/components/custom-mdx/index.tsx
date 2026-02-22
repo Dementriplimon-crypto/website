@@ -1,5 +1,5 @@
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import { useEffect, ReactElement } from "react";
+import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
+import { isValidElement, useEffect, type ReactElement } from "react";
 import Blockquote from "../blockquote";
 import ButtonLinks from "../button-links";
 import Callout, { Caution, Important, Note, Tip, Warning } from "../callout";
@@ -21,8 +21,15 @@ interface CustomMDXProps {
   content: MDXRemoteSerializeResult;
 }
 
-function isReactElement(children: any): children is ReactElement<any> {
-  return children && typeof children === "object" && "props" in children;
+type MermaidCodeElement = {
+  className?: string;
+  children?: string;
+};
+
+function isReactElement(
+  children: unknown,
+): children is ReactElement<MermaidCodeElement> {
+  return isValidElement(children);
 }
 
 export default function CustomMDX({ content }: CustomMDXProps) {
@@ -51,7 +58,9 @@ export default function CustomMDX({ content }: CustomMDXProps) {
           },
           p: (props) => {
             const processedChildren = processGitHubLinks(props.children);
-            return <BodyParagraph {...props}>{processedChildren}</BodyParagraph>;
+            return (
+              <BodyParagraph {...props}>{processedChildren}</BodyParagraph>
+            );
           },
           code: (props) => {
             if (!props.className) {
@@ -72,17 +81,14 @@ export default function CustomMDX({ content }: CustomMDXProps) {
             const { children, ...rest } = props;
             if (isReactElement(children)) {
               const className = children.props?.className;
+              const chart = children.props?.children;
               if (
-                className === "language-mermaid" ||
-                (typeof className === "string" &&
-                  className.includes("language-mermaid"))
+                typeof chart === "string" &&
+                (className === "language-mermaid" ||
+                  (typeof className === "string" &&
+                    className.includes("language-mermaid")))
               ) {
-                return (
-                  <Mermaid
-                    chart={children.props.children}
-                    className="mdx-mermaid"
-                  />
-                );
+                return <Mermaid chart={chart} className="mdx-mermaid" />;
               }
             }
             return <CodeBlock {...props} />;
@@ -90,7 +96,7 @@ export default function CustomMDX({ content }: CustomMDXProps) {
           blockquote: Blockquote,
           img: (props) => (
             // eslint-disable-next-line @next/next/no-img-element
-            (<img className={s.image} src={props.src} alt={props.alt} />)
+            <img className={s.image} src={props.src} alt={props.alt} />
           ),
           VTSequence,
           CardLinks,

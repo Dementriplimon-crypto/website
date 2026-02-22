@@ -20,8 +20,8 @@ export default function Video({
   className,
 }: VideoProps) {
   // Ensure the src has .mp4 extension if no extension is provided
-  const videoSrc = src.includes('.') ? src : `${src}.mp4`;
-  
+  const videoSrc = src.includes(".") ? src : `${src}.mp4`;
+
   return (
     <p style={{ textAlign: "center" }}>
       <video

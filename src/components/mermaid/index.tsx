@@ -13,7 +13,6 @@ export default function Mermaid({ chart, id, className = "" }: MermaidProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let mermaidInstance: any;
     const element = elementRef.current;
 
     const renderMermaid = async () => {
@@ -76,8 +75,6 @@ export default function Mermaid({ chart, id, className = "" }: MermaidProps) {
             useMaxWidth: true,
           },
         });
-
-        mermaidInstance = mermaid;
 
         if (element) {
           element.innerHTML = "";

@@ -7,20 +7,20 @@ const nextConfig = {
     largePageDataBytes: 2 * 1024 * 1024,
   },
   env: {
-    GIT_COMMIT_REF: process.env.VERCEL_GIT_COMMIT_REF || '',
+    GIT_COMMIT_REF: process.env.VERCEL_GIT_COMMIT_REF || "",
   },
 
   async headers() {
     const headers = [];
-    if (process.env.VERCEL_ENV !== 'production') {
+    if (process.env.VERCEL_ENV !== "production") {
       headers.push({
         headers: [
           {
-            key: 'X-Robots-Tag',
-            value: 'noindex',
+            key: "X-Robots-Tag",
+            value: "noindex",
           },
         ],
-        source: '/:path*',
+        source: "/:path*",
       });
     }
 

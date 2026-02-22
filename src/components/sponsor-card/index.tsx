@@ -19,7 +19,12 @@ export default function SponsorCard({
   since,
 }: SponsorCardProps) {
   return (
-    <Link href={href} className={s.card} target="_blank" rel="noopener noreferrer">
+    <Link
+      href={href}
+      className={s.card}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div className={s.logoContainer}>
         <Image
           src={logo}

@@ -1,10 +1,10 @@
-import {
+import type {
   BreakNode,
   FolderNode,
   LinkNode,
   NavTreeNode,
 } from "@/components/nav-tree";
-import { promises as fs } from "fs";
+import { promises as fs } from "node:fs";
 
 // The format that is stored inside of the nav.json file slightly differs
 // from what is required from the nav-tree. Specifically, there is no concept
@@ -73,8 +73,8 @@ function contextualizeNavTreeNode(
     switch (t.type) {
       case "break":
         return t;
-      case "folder":
-        var nextAccSlug = `${accumulatedSlug}${t.path.substring(1)}/`;
+      case "folder": {
+        const nextAccSlug = `${accumulatedSlug}${t.path.substring(1)}/`;
         return {
           type: "folder",
           title: t.title,
@@ -84,8 +84,9 @@ function contextualizeNavTreeNode(
             contextualizeNavTreeNode(activePageSlug, nextAccSlug),
           ),
         } as FolderNode;
-      case "link":
-        var fullSlug = `${accumulatedSlug}${t.path.substring(1)}`;
+      }
+      case "link": {
+        let fullSlug = `${accumulatedSlug}${t.path.substring(1)}`;
         // The value of `fullSlug` for index pages end up having
         // a trailing slash. Remove that so we can compare against
         // the activePageSlug (which will never have a trailing
@@ -98,6 +99,7 @@ function contextualizeNavTreeNode(
           path: t.path,
           active: activePageSlug === fullSlug,
         } as LinkNode;
+      }
       default:
         throw new Error(
           `There is an unexpected item in the 'nav.json' file:

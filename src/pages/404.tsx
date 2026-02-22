@@ -2,7 +2,7 @@ import s from "./404Page.module.css";
 import NavFooterLayout from "@/layouts/nav-footer-layout";
 import { loadDocsNavTreeData } from "@/lib/fetch-nav";
 import { DOCS_DIRECTORY } from "./docs/[...path]";
-import { NavTreeNode } from "@/components/nav-tree";
+import type { NavTreeNode } from "@/components/nav-tree";
 import { H2, P } from "@/components/text";
 import Image from "next/image";
 
