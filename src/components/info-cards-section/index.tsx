@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import SectionWrapper from "../section-wrapper";
 import { H1, H3, P } from "../text";
 import s from "./InfoCards.module.css";

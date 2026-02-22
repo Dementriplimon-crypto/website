@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Terminal, { TerminalProps } from "../terminal";
+import Terminal, { type TerminalProps } from "../terminal";
 
 // A simple animation frame loop manager that's tied to requestAnimationFrame
 // and should always keep frames in lock step with timing updates
@@ -86,7 +86,7 @@ export default function AnimatedTerminal({
 
   useEffect(() => {
     const reducedMotion =
-      window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches === true;
     if (reducedMotion) {
       return;
     }

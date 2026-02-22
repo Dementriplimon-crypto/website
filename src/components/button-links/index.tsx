@@ -1,4 +1,4 @@
-import { ButtonLink, ButtonTheme } from "../link";
+import { ButtonLink, type ButtonTheme } from "../link";
 import s from "./ButtonLinks.module.css";
 
 interface ButtonLinks {

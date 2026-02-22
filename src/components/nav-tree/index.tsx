@@ -104,7 +104,7 @@ function NavTreeNodesList({
               path={path}
               node={node}
               onLinkNodeClicked={() => {
-                onNavLinkClicked && onNavLinkClicked();
+                onNavLinkClicked?.();
               }}
               activeItemRef={activeItemRef}
             />
@@ -139,7 +139,7 @@ function Node({ path, node, onLinkNodeClicked, activeItemRef }: NodeProps) {
           path={path}
           node={node}
           onClick={(e) => {
-            onLinkNodeClicked && onLinkNodeClicked();
+            onLinkNodeClicked?.();
           }}
         />
       );
@@ -169,7 +169,7 @@ function FolderNode({
   onLinkNodeClicked?: () => void;
   activeItemRef?: React.RefObject<HTMLLIElement | null>;
 }) {
-  var [open, setOpen] = useState(node.open ? true : false);
+  const [open, setOpen] = useState(!!node.open);
   return (
     <div className={classNames(s.folderNode, { [s.isOpen]: open })}>
       <button type="button" onClick={() => setOpen(!open)}>

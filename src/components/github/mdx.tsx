@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import GitHub from "./index";
 
 function isReactElement(children: unknown): children is ReactElement {
@@ -17,7 +17,9 @@ export function processGitHubLinks(children: React.ReactNode): React.ReactNode {
       if (i % 2 === 0) {
         if (parts[i]) result.push(parts[i]);
       } else {
-        result.push(<GitHub key={`gh-${i}`} number={parseInt(parts[i], 10)} />);
+        result.push(
+          <GitHub key={`gh-${i}`} number={Number.parseInt(parts[i], 10)} />,
+        );
       }
     }
 

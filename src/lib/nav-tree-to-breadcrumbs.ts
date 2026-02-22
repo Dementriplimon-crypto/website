@@ -1,5 +1,5 @@
-import { Breadcrumb } from "@/components/breadcrumbs";
-import { FolderNode, LinkNode, NavTreeNode } from "@/components/nav-tree";
+import type { Breadcrumb } from "@/components/breadcrumbs";
+import type { FolderNode, LinkNode, NavTreeNode } from "@/components/nav-tree";
 
 export function navTreeToBreadcrumbs(
   firstBreadcrumbTitle: string,
@@ -7,10 +7,10 @@ export function navTreeToBreadcrumbs(
   navTree: NavTreeNode[],
   activePageSlug: string,
 ): Breadcrumb[] {
-  var breadcrumbs: Breadcrumb[] = [];
-  var accumulatedPath = "";
-  var currentNavTree = navTree;
-  var segments = activePageSlug.split("/");
+  const breadcrumbs: Breadcrumb[] = [];
+  let accumulatedPath = "";
+  let currentNavTree = navTree;
+  const segments = activePageSlug.split("/");
 
   breadcrumbs.push({
     text: firstBreadcrumbTitle,
@@ -27,7 +27,7 @@ export function navTreeToBreadcrumbs(
     const currentSegment = segments[0];
 
     // Find the Node which represents the URL segment we're on
-    var nextNode: FolderNode | LinkNode | undefined = currentNavTree.find(
+    const nextNode: FolderNode | LinkNode | undefined = currentNavTree.find(
       (node) => {
         if (node.type === "folder" || node.type === "link") {
           if (node.path === `/${segments[0]}`) {

@@ -2,9 +2,9 @@ import remarkCallout, {
   type Options as RemarkCalloutOptions,
 } from "@r4ai/remark-callout";
 import matter from "gray-matter";
-import recurse, { Item } from "klaw-sync";
+import recurse, { type Item } from "klaw-sync";
 import type { Root } from "mdast";
-import { MDXRemoteSerializeResult } from "next-mdx-remote";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import rehypeHighlight, {
   type Options as RehypeHighlightOptions,
@@ -13,9 +13,9 @@ import { all } from "lowlight";
 import remarkGfm from "remark-gfm";
 import slugify from "slugify";
 import type { Plugin } from "unified";
-import { type Node } from "unist";
+import type { Node } from "unist";
 import { visit } from "unist-util-visit";
-const nodePath = require("path");
+const nodePath = require("node:path");
 
 const MDX_EXTENSION = ".mdx";
 
@@ -61,7 +61,7 @@ export async function loadDocsPage(
   }
   // Now we'll attempt to load the index file path.
   return await loadDocsPageFromRelativeFilePath(
-    nodePath.join(docsDirectory, slug, "index" + MDX_EXTENSION),
+    nodePath.join(docsDirectory, slug, `index${MDX_EXTENSION}`),
   );
 }
 
@@ -71,7 +71,7 @@ async function loadDocsPageFromRelativeFilePath(
   const mdxFileContent = matter.read(relativeFilePath);
   const slug = slugFromRelativeFilePath(relativeFilePath);
 
-  var pageHeaders: PageHeader[] = [];
+  const pageHeaders: PageHeader[] = [];
 
   const content: MDXRemoteSerializeResult = await serialize(
     mdxFileContent.content,
@@ -171,10 +171,10 @@ function parseAnchorLinks({
     // will be "foo-2".
     const encounteredIDs = new Map<string, number>();
 
-    return function (node: Node) {
+    return (node: Node) => {
       visit(node, "heading", (node: Node) => {
         if (node.type === "heading") {
-          let headingNode = node as HeadingNode;
+          const headingNode = node as HeadingNode;
           if (headingNode.children.length > 0) {
             const text = headingNode.children.map((v) => v.value).join("");
             const baseId = slugify(text.toLowerCase());
@@ -218,7 +218,7 @@ export async function loadAllDocsPageSlugs(
   }).map((item: recurse.Item) => {
     return item.path;
   });
-  var docsPageSlugs: Set<string> = new Set();
+  const docsPageSlugs: Set<string> = new Set();
   for (let i = 0; i < allPaths.length; i++) {
     const path = allPaths[i];
     const relativeFilePath = nodePath.relative(docsDirectory, path);
@@ -234,9 +234,8 @@ Both of these files resolve to the same URL, and will cause an issue.
 
 To fix this error, delete one of these files.`,
       );
-    } else {
-      docsPageSlugs.add(slug);
     }
+    docsPageSlugs.add(slug);
   }
   return Array.from(docsPageSlugs);
 }

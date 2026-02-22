@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 
 import { JetBrains_Mono } from "next/font/google";
 
-import { forwardRef, UIEventHandler } from "react";
+import { forwardRef, type UIEventHandler } from "react";
 import s from "./Text.module.css";
 
 // https://github.com/orioncactus/pretendard/tree/main/packages/pretendard-std

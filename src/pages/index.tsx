@@ -1,11 +1,11 @@
 import AnimatedTerminal from "@/components/animated-terminal";
 import GridContainer from "@/components/grid-container";
 import { ButtonLink } from "@/components/link";
-import { TerminalFontSize } from "@/components/terminal";
+import type { TerminalFontSize } from "@/components/terminal";
 import RootLayout from "@/layouts/root-layout";
 import {
   loadAllTerminalFiles,
-  TerminalsMap,
+  type TerminalsMap,
 } from "@/lib/fetch-terminal-content";
 import { useEffect, useState } from "react";
 import s from "./Home.module.css";
@@ -53,7 +53,7 @@ export default function Home({ terminalData }: HomePageProps) {
     windowWidth > 1100 ? "small" : windowWidth > 674 ? "tiny" : "xtiny";
   const heightSize =
     windowHeight > 900 ? "small" : windowHeight > 750 ? "tiny" : "xtiny";
-  var fontSize: TerminalFontSize = "small";
+  let fontSize: TerminalFontSize = "small";
   const sizePriority = ["xtiny", "tiny", "small"];
   for (const size of sizePriority) {
     if (widthSize === size || heightSize === size) {

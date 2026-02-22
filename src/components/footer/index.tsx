@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import GridContainer, { NavAndFooterGridConfig } from "../grid-container";
-import Link, { SimpleLink } from "../link";
+import Link, { type SimpleLink } from "../link";
 import { P } from "../text";
 import s from "./Footer.module.css";
 

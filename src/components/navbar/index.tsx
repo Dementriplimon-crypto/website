@@ -5,8 +5,12 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import GridContainer, { NavAndFooterGridConfig } from "../grid-container";
-import Link, { ButtonLink, SimpleLink } from "../link";
-import NavTree, { BreakNode, LinkNode, NavTreeNode } from "../nav-tree";
+import Link, { ButtonLink, type SimpleLink } from "../link";
+import NavTree, {
+  type BreakNode,
+  type LinkNode,
+  type NavTreeNode,
+} from "../nav-tree";
 import GhosttyWordmark from "./ghostty-wordmark.svg";
 import s from "./Navbar.module.css";
 import { useRouter } from "next/router";
@@ -189,9 +193,9 @@ function MenuToggle({ isOpen, onToggle }: MenuToggleProps) {
   return (
     <button type="button" onClick={onToggle} className={s.menuToggle}>
       <div className={classNames(s.hamburger)} data-open={isOpen}>
-        <div className={s.hamburgerLayer}></div>
-        <div className={s.hamburgerLayer}></div>
-        <div className={s.hamburgerLayer}></div>
+        <div className={s.hamburgerLayer} />
+        <div className={s.hamburgerLayer} />
+        <div className={s.hamburgerLayer} />
       </div>
     </button>
   );

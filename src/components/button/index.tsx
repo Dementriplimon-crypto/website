@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FocusEvent, forwardRef, Ref } from "react";
+import { type FocusEvent, forwardRef, type Ref } from "react";
 import s from "./Button.module.css";
 
 export type ButtonSize = "small" | "medium" | "large";

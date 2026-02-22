@@ -1,5 +1,5 @@
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import { isValidElement, useEffect, ReactElement } from "react";
+import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
+import { isValidElement, useEffect, type ReactElement } from "react";
 import Blockquote from "../blockquote";
 import ButtonLinks from "../button-links";
 import Callout, { Caution, Important, Note, Tip, Warning } from "../callout";
