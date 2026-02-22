@@ -23,7 +23,7 @@ function Button(
     onBlur,
     onClick,
   }: ButtonProps,
-  ref?: Ref<HTMLButtonElement>
+  ref?: Ref<HTMLButtonElement>,
 ) {
   return (
     <button

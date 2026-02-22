@@ -69,7 +69,8 @@ export default function DonateCard({
           <div className={s.methodContent}>
             <span className={s.methodTitle}>DAF or Foundation</span>
             <span className={s.methodDesc}>
-              Use the EIN above and specify &quot;Ghostty&quot; as the recipient in the notes
+              Use the EIN above and specify &quot;Ghostty&quot; as the recipient
+              in the notes
             </span>
           </div>
         </div>
@@ -78,12 +79,15 @@ export default function DonateCard({
             <Coins />
           </div>
           <div className={s.methodContent}>
-            <span className={s.methodTitle}>Stock, Cryptocurrency, or Other Assets</span>
+            <span className={s.methodTitle}>
+              Stock, Cryptocurrency, or Other Assets
+            </span>
             <span className={s.methodDesc}>
               Contact{" "}
               <a href={`mailto:${contactEmail}`} className={s.methodLink}>
                 {contactName}
-              </a>.
+              </a>
+              .
             </span>
           </div>
         </div>

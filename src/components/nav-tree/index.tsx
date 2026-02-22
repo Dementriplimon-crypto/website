@@ -142,8 +142,8 @@ function Node({ path, node, onLinkNodeClicked, activeItemRef }: NodeProps) {
     default:
       throw new Error(
         `Encountered an unexpected node type at ${path} \n\n ${JSON.stringify(
-          node
-        )}`
+          node,
+        )}`,
       );
   }
 }

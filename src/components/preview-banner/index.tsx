@@ -26,7 +26,9 @@ export default function PreviewBanner() {
         You are viewing the website for the tip (nightly) version of Ghostty.
       </span>
       <span className="link">
-        <a href="https://ghostty.org">Click here for the latest stable version.</a>
+        <a href="https://ghostty.org">
+          Click here for the latest stable version.
+        </a>
       </span>
     </div>
   );

@@ -51,7 +51,9 @@ export default function CustomMDX({ content }: CustomMDXProps) {
           },
           p: (props) => {
             const processedChildren = processGitHubLinks(props.children);
-            return <BodyParagraph {...props}>{processedChildren}</BodyParagraph>;
+            return (
+              <BodyParagraph {...props}>{processedChildren}</BodyParagraph>
+            );
           },
           code: (props) => {
             if (!props.className) {
@@ -90,7 +92,7 @@ export default function CustomMDX({ content }: CustomMDXProps) {
           blockquote: Blockquote,
           img: (props) => (
             // eslint-disable-next-line @next/next/no-img-element
-            (<img className={s.image} src={props.src} alt={props.alt} />)
+            <img className={s.image} src={props.src} alt={props.alt} />
           ),
           VTSequence,
           CardLinks,

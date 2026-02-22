@@ -30,9 +30,12 @@ export default function VTSequence({
       )}
       <ol className={s.sequence}>
         {sequenceElements.map(({ value, hex }, i) => (
-          <li key={i} className={classNames(s.vtelem, {
-            [s.parameter]: hex == null
-          })}>
+          <li
+            key={i}
+            className={classNames(s.vtelem, {
+              [s.parameter]: hex == null,
+            })}
+          >
             <dl>
               <dt>{hex ? hex : "____"}</dt>
               <dd>{value}</dd>

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && prettier 'src/**/*.ts' --write"
+    "lint": "biome check .",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@r4ai/remark-callout": "^0.6.2",
@@ -34,9 +35,7 @@
     "@types/react": "19.2.3",
     "@types/react-dom": "19.2.3",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^8",
-    "eslint-config-next": "15.5.7",
-    "prettier": "3.4.2",
+    "@biomejs/biome": "^1.9.4",
     "typescript": "5.5.4"
   },
   "overrides": {

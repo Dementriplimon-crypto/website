@@ -72,8 +72,8 @@ export default function Navbar({
   }, [mobileMenuOpen]);
 
   /* Instead of closing the menu with the NavTree's onNavLinkClicked prop,
-    * we'll close it when the route changes. This avoids the annoying flicker
-    * between the old and new pages when the menu closes. */
+   * we'll close it when the route changes. This avoids the annoying flicker
+   * between the old and new pages when the menu closes. */
   useEffect(() => {
     const handleRouteChangeComplete = () => {
       setMobileMenuOpen(false);

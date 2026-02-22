@@ -6,9 +6,7 @@ import classNames from "classnames";
 export default function ScrollToTopButton() {
   const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
-  const setScrollToTopButtonRef = useRef<HTMLButtonElement>(
-    null
-  );
+  const setScrollToTopButtonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
@@ -25,10 +23,10 @@ export default function ScrollToTopButton() {
       // Keep track if we're completely at the bottom of the page, as to lift
       // the scroll to top button as to not cover the footer.
       const isNotAtBottom = documentHeight - (scrollTop + windowHeight) > 50;
-      if(isNotAtBottom) {
-        setIsAtBottom(false)
+      if (isNotAtBottom) {
+        setIsAtBottom(false);
       } else {
-        setIsAtBottom(true)
+        setIsAtBottom(true);
       }
     };
 
@@ -39,15 +37,16 @@ export default function ScrollToTopButton() {
   }, []);
 
   return (
-    showScrollToTopButton &&
-    <button
-      ref={setScrollToTopButtonRef}
-      className={classNames(s.scrollToTopButton, {
-        [s.isAtBottom]: isAtBottom
-      })}
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-    >
-      <ArrowUp size={16} />
-    </button>
+    showScrollToTopButton && (
+      <button
+        ref={setScrollToTopButtonRef}
+        className={classNames(s.scrollToTopButton, {
+          [s.isAtBottom]: isAtBottom,
+        })}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        <ArrowUp size={16} />
+      </button>
+    )
   );
-};
+}
