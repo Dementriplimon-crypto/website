@@ -5,14 +5,15 @@ import GridContainer from "@/components/grid-container";
 import { ButtonLink } from "@/components/link";
 import { P } from "@/components/text";
 import type { TerminalFontSize } from "@/components/terminal";
-import type { TerminalsMap } from "@/lib/fetch-terminal-content";
+import type { TerminalsMap } from "./terminal-data";
 import { useEffect, useState } from "react";
-import s from "./Home.module.css";
+import s from "./home-content.module.css";
 
 interface HomeClientProps {
   terminalData: TerminalsMap;
 }
 
+/** Tracks the current viewport size for responsive terminal sizing. */
 function useWindowSize() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -23,11 +24,13 @@ function useWindowSize() {
     }
     window.addEventListener("resize", updateSize);
     updateSize();
+
     return () => window.removeEventListener("resize", updateSize);
   }, []);
   return [width, height];
 }
 
+/** Renders the animated terminal hero and action links for the homepage. */
 export default function HomeClient({ terminalData }: HomeClientProps) {
   const animationFrames = Object.keys(terminalData)
     .filter((k) => {
