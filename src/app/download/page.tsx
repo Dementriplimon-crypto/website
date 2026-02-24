@@ -1,31 +1,69 @@
 import type { Metadata } from "next";
+import { XMLParser } from "fast-xml-parser";
 import Image from "next/image";
 import SectionWrapper from "@/components/section-wrapper";
 import { H1, P } from "@/components/text";
-import { fetchLatestGhosttyVersion } from "@/lib/fetch-latest-ghostty-version";
 import SVGIMG from "../../../public/ghostty-logo.svg";
-import ReleaseDownloadPage from "./release-download-page";
-import TipDownloadPage from "./tip-download-page";
+import ReleaseDownloadPage from "./ReleaseDownloadPage";
+import TipDownloadPage from "./TipDownloadPage";
 import s from "./DownloadPage.module.css";
 
-export const dynamic = "force-static";
+type AppcastItem = {
+  "sparkle:version": string;
+  "sparkle:shortVersionString": string;
+};
 
+type Appcast = {
+  rss?: {
+    channel?: {
+      item?: AppcastItem | AppcastItem[];
+    };
+  };
+};
+
+/** Metadata for the download page. */
 export const metadata: Metadata = {
   title: "Download Ghostty",
   description:
     "Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.",
 };
 
-async function loadPageData(): Promise<{
-  latestVersion: string;
-}> {
-  return {
-    latestVersion: await fetchLatestGhosttyVersion(),
-  };
+/** Fetches and parses the appcast to determine the latest released Ghostty version. */
+async function fetchLatestGhosttyVersion(): Promise<string> {
+  const response = await fetch(
+    "https://release.files.ghostty.org/appcast.xml",
+    {
+      cache: "force-cache",
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch XML: ${response.statusText}`);
+  }
+
+  const xmlContent = await response.text();
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+  });
+  const parsedXml = parser.parse(xmlContent) as Appcast;
+
+  const items = parsedXml.rss?.channel?.item;
+  if (!items) {
+    throw new Error("Failed to parse appcast XML: no items found");
+  }
+
+  const itemsArray = Array.isArray(items) ? items : [items];
+  const latestItem = itemsArray.reduce((maxItem, currentItem) => {
+    const currentVersion = Number.parseInt(currentItem["sparkle:version"], 10);
+    const maxVersion = Number.parseInt(maxItem["sparkle:version"], 10);
+    return currentVersion > maxVersion ? currentItem : maxItem;
+  });
+
+  return latestItem["sparkle:shortVersionString"];
 }
 
+/** Renders the download page for either stable releases or the tip build. */
 export default async function DownloadPage() {
-  const { latestVersion } = await loadPageData();
+  const latestVersion = await fetchLatestGhosttyVersion();
   const isTip = process.env.GIT_COMMIT_REF === "tip";
 
   return (
