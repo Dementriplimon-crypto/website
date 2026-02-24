@@ -1,3 +1,4 @@
+import type { MDXComponents } from "mdx/types";
 import Blockquote from "@/components/blockquote";
 import ButtonLinks from "@/components/button-links";
 import Callout, {
@@ -9,7 +10,6 @@ import Callout, {
 } from "@/components/callout";
 import CardLinks from "@/components/card-links";
 import CodeBlock from "@/components/codeblock";
-import s from "@/components/custom-mdx/CustomMDX.module.css";
 import DonateCard from "@/components/donate-card";
 import GitHub from "@/components/github";
 import { processGitHubLinks } from "@/components/github/mdx";
@@ -19,7 +19,13 @@ import SponsorCard from "@/components/sponsor-card";
 import { BodyParagraph, LI } from "@/components/text";
 import VTSequence from "@/components/vt-sequence";
 import Video from "@/components/video";
-import { isValidElement, type ReactElement } from "react";
+import s from "@/lib/docs/docs-mdx.module.css";
+import {
+  isValidElement,
+  type ComponentPropsWithoutRef,
+  type ImgHTMLAttributes,
+  type ReactElement,
+} from "react";
 
 type MermaidCodeElement = {
   className?: string;
@@ -33,35 +39,35 @@ function isReactElement(
   return isValidElement(children);
 }
 
-// mdxComponents defines the React component map used by docs MDX compilation.
-export const mdxComponents = {
-  h1: (props: React.ComponentPropsWithoutRef<"h1">) => (
+// mdxComponents defines the React component map used while rendering docs MDX.
+const mdxComponents: MDXComponents = {
+  h1: (props: ComponentPropsWithoutRef<"h1">) => (
     <JumplinkHeader {...props} as="h1" />
   ),
-  h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
+  h2: (props: ComponentPropsWithoutRef<"h2">) => (
     <JumplinkHeader {...props} as="h2" />
   ),
-  h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
+  h3: (props: ComponentPropsWithoutRef<"h3">) => (
     <JumplinkHeader {...props} as="h3" />
   ),
-  h4: (props: React.ComponentPropsWithoutRef<"h4">) => (
+  h4: (props: ComponentPropsWithoutRef<"h4">) => (
     <JumplinkHeader {...props} as="h4" />
   ),
-  h5: (props: React.ComponentPropsWithoutRef<"h5">) => (
+  h5: (props: ComponentPropsWithoutRef<"h5">) => (
     <JumplinkHeader {...props} as="h5" />
   ),
-  h6: (props: React.ComponentPropsWithoutRef<"h6">) => (
+  h6: (props: ComponentPropsWithoutRef<"h6">) => (
     <JumplinkHeader {...props} as="h6" />
   ),
-  li: (props: React.ComponentPropsWithoutRef<"li">) => {
+  li: (props: ComponentPropsWithoutRef<"li">) => {
     const processedChildren = processGitHubLinks(props.children);
     return <LI {...props}>{processedChildren}</LI>;
   },
-  p: (props: React.ComponentPropsWithoutRef<"p">) => {
+  p: (props: ComponentPropsWithoutRef<"p">) => {
     const processedChildren = processGitHubLinks(props.children);
     return <BodyParagraph {...props}>{processedChildren}</BodyParagraph>;
   },
-  code: (props: React.ComponentPropsWithoutRef<"code">) => {
+  code: (props: ComponentPropsWithoutRef<"code">) => {
     if (!props.className) {
       return <code {...props} />;
     }
@@ -75,7 +81,7 @@ export const mdxComponents = {
 
     return <code {...props} />;
   },
-  pre: (props: React.ComponentPropsWithoutRef<"pre">) => {
+  pre: (props: ComponentPropsWithoutRef<"pre">) => {
     const { children } = props;
     if (isReactElement(children)) {
       const className = children.props?.className;
@@ -93,7 +99,7 @@ export const mdxComponents = {
     return <CodeBlock {...props} />;
   },
   blockquote: Blockquote,
-  img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  img: (props: ImgHTMLAttributes<HTMLImageElement>) => (
     // biome-ignore lint/performance/noImgElement: Docs content deliberately uses plain img tags.
     <img className={s.image} src={props.src} alt={props.alt} />
   ),
@@ -115,3 +121,11 @@ export const mdxComponents = {
     <Mermaid {...props} />
   ),
 };
+
+// useMDXComponents returns the component map that Next.js uses while rendering MDX files.
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    ...mdxComponents,
+    ...components,
+  };
+}

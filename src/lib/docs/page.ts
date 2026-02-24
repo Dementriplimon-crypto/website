@@ -1,21 +1,13 @@
-import remarkCallout, {
-  type Options as RemarkCalloutOptions,
-} from "@r4ai/remark-callout";
 import matter from "gray-matter";
-import { all } from "lowlight";
-import type { Root } from "mdast";
-import { compileMDX } from "next-mdx-remote/rsc";
 import { promises as fs } from "node:fs";
-import type { ReactNode } from "react";
-import rehypeHighlight, {
-  type Options as RehypeHighlightOptions,
-} from "rehype-highlight";
+import { createElement, type ComponentType, type ReactNode } from "react";
+import remarkMdx from "remark-mdx";
+import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import slugify from "slugify";
-import type { Plugin } from "unified";
+import { unified } from "unified";
 import type { Node } from "unist";
 import { visit } from "unist-util-visit";
-import { mdxComponents } from "./mdx-components";
 
 const nodePath = require("node:path");
 
@@ -75,36 +67,8 @@ async function loadDocsPageFromRelativeFilePath(
 ): Promise<DocsPageData> {
   const mdxFileContent = matter.read(relativeFilePath);
   const slug = slugFromRelativeFilePath(relativeFilePath);
-
-  const pageHeaders: PageHeader[] = [];
-
-  const { content } = await compileMDX({
-    source: mdxFileContent.content,
-    components: mdxComponents,
-    options: {
-      // next-mdx-remote v6 blocks JS expressions by default. Our docs use
-      // trusted MDX expressions, so keep JS enabled while retaining the
-      // dangerous-global protections introduced in v6.
-      blockJS: false,
-      blockDangerousJS: true,
-      mdxOptions: {
-        remarkPlugins: [
-          remarkGfm,
-          gfmAlertsAsCallouts(),
-          parseAnchorLinks({ pageHeaders }),
-        ],
-        rehypePlugins: [
-          [
-            rehypeHighlight,
-            {
-              detect: false,
-              languages: all,
-            } satisfies RehypeHighlightOptions,
-          ],
-        ],
-      },
-    },
-  });
+  const pageHeaders = await extractPageHeaders(mdxFileContent.content);
+  const MdxContent = await loadMdxComponent(relativeFilePath);
   return {
     slug,
     relativeFilePath,
@@ -116,33 +80,40 @@ async function loadDocsPageFromRelativeFilePath(
     hideSidecar: Object.hasOwn(mdxFileContent.data, "hideSidecar")
       ? mdxFileContent.data.hideSidecar
       : false,
-    content,
+    content: createElement(MdxContent),
     pageHeaders,
   };
 }
 
-// gfmAlertsAsCallouts converts GFM alert blocks into typed Callout MDX nodes.
-function gfmAlertsAsCallouts(): [
-  Plugin<[RemarkCalloutOptions], Root>,
-  RemarkCalloutOptions,
-] {
-  return [
-    remarkCallout,
-    {
-      root: (callout) => ({
-        tagName: "Callout",
-        properties: {
-          type: callout.type.toLowerCase(),
-          isFoldable: String(callout.isFoldable),
-        },
-      }),
-      // We won't use title, just type.
-      title: () => ({
-        tagName: "callout-title",
-        properties: {},
-      }),
-    } satisfies RemarkCalloutOptions,
-  ];
+// MdxModule is the expected shape of an imported MDX module.
+type MdxModule = {
+  default: ComponentType;
+};
+
+// loadMdxComponent loads the statically-compiled MDX React component for one docs file.
+async function loadMdxComponent(
+  relativeFilePath: string,
+): Promise<ComponentType> {
+  const normalizedRelativePath = relativeFilePath
+    .replaceAll(nodePath.sep, "/")
+    .replace(/^\.\//, "");
+  const docsRelativePath = normalizedRelativePath.replace(/^docs\//, "");
+  const importPath = `../../../docs/${docsRelativePath}`;
+  const mdxModule = (await import(importPath)) as MdxModule;
+  return mdxModule.default;
+}
+
+// extractPageHeaders parses MDX source and returns stable heading metadata.
+async function extractPageHeaders(source: string): Promise<PageHeader[]> {
+  const pageHeaders: PageHeader[] = [];
+  const processor = unified()
+    .use(remarkParse)
+    .use(remarkMdx)
+    .use(remarkGfm)
+    .use(parseAnchorLinks({ pageHeaders }));
+  const tree = processor.parse(source);
+  await processor.run(tree);
+  return pageHeaders;
 }
 
 // parseAnchorLinks captures headings into pageHeaders and assigns stable heading IDs.
