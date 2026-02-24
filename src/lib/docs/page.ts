@@ -1,23 +1,25 @@
 import remarkCallout, {
   type Options as RemarkCalloutOptions,
 } from "@r4ai/remark-callout";
-import { promises as fs } from "node:fs";
 import matter from "gray-matter";
+import { all } from "lowlight";
 import type { Root } from "mdast";
 import { compileMDX } from "next-mdx-remote/rsc";
+import { promises as fs } from "node:fs";
 import type { ReactNode } from "react";
 import rehypeHighlight, {
   type Options as RehypeHighlightOptions,
 } from "rehype-highlight";
-import { mdxComponents } from "./mdx-components";
-import { all } from "lowlight";
 import remarkGfm from "remark-gfm";
 import slugify from "slugify";
 import type { Plugin } from "unified";
 import type { Node } from "unist";
 import { visit } from "unist-util-visit";
+import { mdxComponents } from "./mdx-components";
+
 const nodePath = require("node:path");
 
+// MDX_EXTENSION is the file extension used for docs page source files.
 const MDX_EXTENSION = ".mdx";
 
 export type PageHeader = {
@@ -41,6 +43,7 @@ export interface DocsPageData {
   pageHeaders: PageHeader[];
 }
 
+// loadDocsPage loads docs page data for a slug, checking direct and index MDX paths.
 export async function loadDocsPage(
   docsDirectory: string,
   slug: string,
@@ -66,6 +69,7 @@ export async function loadDocsPage(
   );
 }
 
+// loadDocsPageFromRelativeFilePath compiles one MDX file and extracts docs metadata.
 async function loadDocsPageFromRelativeFilePath(
   relativeFilePath: string,
 ): Promise<DocsPageData> {
@@ -117,8 +121,7 @@ async function loadDocsPageFromRelativeFilePath(
   };
 }
 
-// Parse out GFM Style Alerts (e.g. [!NOTE]) & render them as Callouts
-// https://github.com/orgs/community/discussions/16925
+// gfmAlertsAsCallouts converts GFM alert blocks into typed Callout MDX nodes.
 function gfmAlertsAsCallouts(): [
   Plugin<[RemarkCalloutOptions], Root>,
   RemarkCalloutOptions,
@@ -142,8 +145,7 @@ function gfmAlertsAsCallouts(): [
   ];
 }
 
-// parseAnchorLinks is a remark plugin which will fill the pageHeaders array
-// with headers as they are encountered
+// parseAnchorLinks captures headings into pageHeaders and assigns stable heading IDs.
 function parseAnchorLinks({
   pageHeaders,
 }: {
@@ -174,9 +176,9 @@ function parseAnchorLinks({
     const encounteredIDs = new Map<string, number>();
 
     return (node: Node) => {
-      visit(node, "heading", (node: Node) => {
-        if (node.type === "heading") {
-          const headingNode = node as HeadingNode;
+      visit(node, "heading", (visitedNode: Node) => {
+        if (visitedNode.type === "heading") {
+          const headingNode = visitedNode as HeadingNode;
           if (headingNode.children.length > 0) {
             const text = headingNode.children.map((v) => v.value).join("");
             const baseId = slugify(text.toLowerCase());
@@ -216,6 +218,7 @@ function parseAnchorLinks({
   };
 }
 
+// loadAllDocsPageSlugs recursively discovers docs MDX files and returns their slugs.
 export async function loadAllDocsPageSlugs(
   docsDirectory: string,
 ): Promise<Array<string>> {
@@ -244,10 +247,12 @@ To fix this error, delete one of these files.`,
   return Array.from(docsPageSlugs);
 }
 
+// isErrorWithCode narrows unknown values to filesystem-like errors with a code field.
 const isErrorWithCode = (err: unknown): err is Error & { code: unknown } => {
   return err instanceof Error && typeof err === "object" && "code" in err;
 };
 
+// slugFromRelativeFilePath maps a docs MDX file path into a route slug.
 function slugFromRelativeFilePath(relativeFilePath: string): string {
   return (
     relativeFilePath
@@ -258,6 +263,7 @@ function slugFromRelativeFilePath(relativeFilePath: string): string {
   );
 }
 
+// collectAllFilesRecursively returns every file under the given root directory.
 async function collectAllFilesRecursively(root: string): Promise<string[]> {
   const files: string[] = [];
   const entries = await fs.readdir(root, { withFileTypes: true });

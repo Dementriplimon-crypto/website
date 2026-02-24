@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { Breadcrumb } from "@/components/breadcrumbs";
 import type { NavTreeNode } from "@/components/nav-tree";
-import { DOCS_DIRECTORY, DOCS_PAGES_ROOT_PATH } from "@/lib/docs-config";
+import { DOCS_DIRECTORY, DOCS_PAGES_ROOT_PATH } from "@/lib/docs/config";
 import {
   type DocsPageData,
   loadAllDocsPageSlugs,
   loadDocsPage,
-} from "@/lib/fetch-docs";
-import { docsMetadataTitle } from "@/lib/docs-metadata-title";
-import { loadDocsNavTreeData } from "@/lib/fetch-nav";
-import { navTreeToBreadcrumbs } from "@/lib/nav-tree-to-breadcrumbs";
+} from "@/lib/docs/page";
+import {
+  docsMetadataTitle,
+  loadDocsNavTreeData,
+  navTreeToBreadcrumbs,
+} from "@/lib/docs/navigation";
 import DocsPageContent from "../DocsPageContent";
 
 interface DocsRouteProps {

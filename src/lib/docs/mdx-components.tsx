@@ -9,6 +9,7 @@ import Callout, {
 } from "@/components/callout";
 import CardLinks from "@/components/card-links";
 import CodeBlock from "@/components/codeblock";
+import s from "@/components/custom-mdx/CustomMDX.module.css";
 import DonateCard from "@/components/donate-card";
 import GitHub from "@/components/github";
 import { processGitHubLinks } from "@/components/github/mdx";
@@ -19,19 +20,20 @@ import { BodyParagraph, LI } from "@/components/text";
 import VTSequence from "@/components/vt-sequence";
 import Video from "@/components/video";
 import { isValidElement, type ReactElement } from "react";
-import s from "@/components/custom-mdx/CustomMDX.module.css";
 
 type MermaidCodeElement = {
   className?: string;
   children?: string;
 };
 
+// isReactElement safely narrows unknown pre/code children into React elements.
 function isReactElement(
   children: unknown,
 ): children is ReactElement<MermaidCodeElement> {
   return isValidElement(children);
 }
 
+// mdxComponents defines the React component map used by docs MDX compilation.
 export const mdxComponents = {
   h1: (props: React.ComponentPropsWithoutRef<"h1">) => (
     <JumplinkHeader {...props} as="h1" />

@@ -12,10 +12,9 @@ import NavTree, {
   type LinkNode,
   type NavTreeNode,
 } from "../nav-tree";
+import { DOCS_PAGES_ROOT_PATH } from "@/lib/docs/config";
 import GhosttyWordmark from "./ghostty-wordmark.svg";
 import s from "./Navbar.module.css";
-
-const DOCS_PAGES_ROOT_PATH = "/docs";
 
 export interface NavbarProps {
   className?: string;

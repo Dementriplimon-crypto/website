@@ -7,7 +7,7 @@ import Text from "../text";
 import s from "./JumplinkHeader.module.css";
 import { useInView } from "react-intersection-observer";
 import { isValidElement, useEffect } from "react";
-import { useStore } from "@/lib/use-store";
+import { useDocsStore } from "@/lib/docs/store";
 
 interface JumplinkHeaderProps {
   as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
@@ -32,7 +32,9 @@ export default function JumplinkHeader({
     rootMargin: "-72px",
     threshold: 1,
   });
-  const updateHeaderIdInView = useStore((state) => state.updateHeaderIdInView);
+  const updateHeaderIdInView = useDocsStore(
+    (state) => state.updateHeaderIdInView,
+  );
   useEffect(() => {
     updateHeaderIdInView(inView, id);
   }, [inView, id, updateHeaderIdInView]);
