@@ -3,7 +3,6 @@ import NavTree, { type NavTreeNode } from "@/components/nav-tree";
 import ScrollToTopButton from "@/components/scroll-to-top";
 import Sidecar from "@/components/sidecar";
 import { H1, P } from "@/components/text";
-import NavFooterLayout from "@/layouts/nav-footer-layout";
 import type { DocsPageData } from "@/lib/fetch-docs";
 import { DOCS_PAGES_ROOT_PATH, GITHUB_REPO_URL } from "@/lib/docs-config";
 import { Pencil } from "lucide-react";
@@ -36,51 +35,49 @@ export default function DocsPageContent({
     : `${GITHUB_REPO_URL}/edit/main/${relativeFilePath}`;
 
   return (
-    <NavFooterLayout docsNavTree={navTreeData}>
-      <div className={s.docsPage}>
-        <div className={s.sidebar}>
-          <div className={s.sidebarContentWrapper}>
-            <NavTree
-              nodeGroups={[
-                {
-                  rootPath: DOCS_PAGES_ROOT_PATH,
-                  nodes: navTreeData,
-                },
-              ]}
-              className={s.sidebarNavTree}
-            />
+    <div className={s.docsPage}>
+      <div className={s.sidebar}>
+        <div className={s.sidebarContentWrapper}>
+          <NavTree
+            nodeGroups={[
+              {
+                rootPath: DOCS_PAGES_ROOT_PATH,
+                nodes: navTreeData,
+              },
+            ]}
+            className={s.sidebarNavTree}
+          />
+        </div>
+      </div>
+
+      <main className={s.contentWrapper}>
+        <ScrollToTopButton />
+
+        <div className={s.docsContentWrapper}>
+          <div className={s.breadcrumbsBar}>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+          <div className={s.heading}>
+            <H1>{title}</H1>
+            <P className={s.description} weight="regular">
+              {description}
+            </P>
+          </div>
+          <div className={customMdxStyles.customMDX}>{content}</div>
+          <br />
+          <div className={s.editOnGithub}>
+            <a href={resolvedEditOnGithubLink}>
+              Edit on GitHub <Pencil size={14} />
+            </a>
           </div>
         </div>
 
-        <main className={s.contentWrapper}>
-          <ScrollToTopButton />
-
-          <div className={s.docsContentWrapper}>
-            <div className={s.breadcrumbsBar}>
-              <Breadcrumbs breadcrumbs={breadcrumbs} />
-            </div>
-            <div className={s.heading}>
-              <H1>{title}</H1>
-              <P className={s.description} weight="regular">
-                {description}
-              </P>
-            </div>
-            <div className={customMdxStyles.customMDX}>{content}</div>
-            <br />
-            <div className={s.editOnGithub}>
-              <a href={resolvedEditOnGithubLink}>
-                Edit on GitHub <Pencil size={14} />
-              </a>
-            </div>
-          </div>
-
-          <Sidecar
-            hidden={hideSidecar}
-            className={s.sidecar}
-            items={pageHeaders}
-          />
-        </main>
-      </div>
-    </NavFooterLayout>
+        <Sidecar
+          hidden={hideSidecar}
+          className={s.sidecar}
+          items={pageHeaders}
+        />
+      </main>
+    </div>
   );
 }

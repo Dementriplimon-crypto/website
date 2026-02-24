@@ -33,6 +33,7 @@ export default function Navbar({
   docsNavTree,
 }: NavbarProps) {
   const pathname = usePathname();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileContentRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLLIElement>(null);
