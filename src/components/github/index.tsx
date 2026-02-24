@@ -1,4 +1,3 @@
-import { Github } from "lucide-react";
 import Link from "../link";
 import s from "./GitHub.module.css";
 

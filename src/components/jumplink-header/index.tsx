@@ -1,16 +1,19 @@
+"use client";
+
 import classNames from "classnames";
 import { Link } from "lucide-react";
 import slugify from "slugify";
 import Text from "../text";
 import s from "./JumplinkHeader.module.css";
 import { useInView } from "react-intersection-observer";
-import { isValidElement, useEffect, useState } from "react";
-import { useStore } from "@/lib/use-store";
+import { isValidElement, useEffect } from "react";
+import { useDocsStore } from "@/lib/docs/store";
 
 interface JumplinkHeaderProps {
   as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   className?: string;
   children?: React.ReactNode;
+  id?: string;
   "data-index"?: string;
 }
 
@@ -18,9 +21,10 @@ export default function JumplinkHeader({
   className,
   children,
   as,
+  id: providedID,
   "data-index": dataIndex,
 }: JumplinkHeaderProps) {
-  const id = headerDeeplinkIdentifier(children, dataIndex);
+  const id = providedID ?? headerDeeplinkIdentifier(children, dataIndex);
   const { ref, inView } = useInView({
     // This is our header height!  This also impacts our
     // margin below, but TBH I actually like it needing to
@@ -28,7 +32,9 @@ export default function JumplinkHeader({
     rootMargin: "-72px",
     threshold: 1,
   });
-  const updateHeaderIdInView = useStore((state) => state.updateHeaderIdInView);
+  const updateHeaderIdInView = useDocsStore(
+    (state) => state.updateHeaderIdInView,
+  );
   useEffect(() => {
     updateHeaderIdInView(inView, id);
   }, [inView, id, updateHeaderIdInView]);

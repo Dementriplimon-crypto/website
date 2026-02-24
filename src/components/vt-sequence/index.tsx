@@ -66,7 +66,11 @@ const special: Record<string, number> = {
 };
 
 function parseSequence(sequence: string | string[]) {
-  const sequenceArray = typeof sequence === "string" ? [sequence] : sequence;
+  if (!sequence) {
+    return [];
+  }
+
+  const sequenceArray = Array.isArray(sequence) ? [...sequence] : [sequence];
 
   if (sequenceArray[0] === "CSI") {
     sequenceArray.shift();
@@ -83,7 +87,7 @@ function parseSequence(sequence: string | string[]) {
 
   return sequenceArray.map((value) => {
     // Pn is a param with name n.
-    const param = value.match(/\P(\w)/)?.[1];
+    const param = value.match(/P(\w)/)?.[1];
     if (param) return { value: param };
 
     // Use special lookup if it exists

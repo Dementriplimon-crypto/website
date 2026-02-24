@@ -1,12 +1,13 @@
 import { create } from "zustand";
 
-type State = {
+type DocsStoreState = {
   headerIdsInView: string[];
   updateHeaderIdInView: (inView: boolean, id: string) => void;
   resetHeaderIdsInView: () => void;
 };
 
-export const useStore = create<State>()((set, get) => ({
+// useDocsStore tracks which docs headers are currently in view for sidecar highlighting.
+export const useDocsStore = create<DocsStoreState>()((set, get) => ({
   headerIdsInView: [],
   updateHeaderIdInView: (inView: boolean, id: string) => {
     const headerIds = get().headerIdsInView;

@@ -2,12 +2,14 @@ import { ButtonLink } from "@/components/link";
 import GenericCard from "@/components/generic-card";
 import { CodeXml, Download, Package } from "lucide-react";
 import s from "./DownloadPage.module.css";
-import type { DownloadPageProps } from "./index";
+
+interface ReleaseDownloadPageProps {
+  latestVersion: string;
+}
 
 export default function ReleaseDownloadPage({
   latestVersion,
-  docsNavTree,
-}: DownloadPageProps) {
+}: ReleaseDownloadPageProps) {
   return (
     <div className={s.downloadCards}>
       <GenericCard

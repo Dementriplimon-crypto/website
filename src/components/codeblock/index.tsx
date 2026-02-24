@@ -1,3 +1,5 @@
+"use client";
+
 import classNames from "classnames";
 import { jetbrainsMono } from "../text";
 import s from "./CodeBlock.module.css";

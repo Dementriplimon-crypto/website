@@ -1,9 +1,11 @@
+"use client";
+
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import classNames from "classnames";
-import { H6, P } from "../text";
+import { P } from "../text";
 import s from "./Sidecar.module.css";
-import { useStore } from "@/lib/use-store";
+import { useDocsStore } from "@/lib/docs/store";
 
 interface SidecarItem {
   id: string;
@@ -31,7 +33,7 @@ export default function Sidecar({
 }: SidecarProps) {
   const activeItemRef = useRef<HTMLLIElement>(null);
   const sidecarRef = useRef<HTMLDivElement>(null);
-  const headerIdsInView = useStore((state) => state.headerIdsInView);
+  const headerIdsInView = useDocsStore((state) => state.headerIdsInView);
   const shownItems = useMemo(() => {
     return items.filter((v) => v.depth <= MAX_SIDECAR_HEADER_DEPTH);
   }, [items]);

@@ -31,7 +31,7 @@ export default function Breadcrumbs({
               text={breadcrumb.text}
             />
           ) : (
-            <>{breadcrumb.text}</>
+            breadcrumb.text
           )}
           {i + 1 < breadcrumbs.length && (
             <ChevronRight className={s.chevron} size={16} strokeWidth={3} />

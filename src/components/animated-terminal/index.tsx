@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Terminal, { type TerminalProps } from "../terminal";
 
@@ -76,12 +78,13 @@ export default function AnimatedTerminal({
   whitespacePadding,
   frameLengthMs,
 }: AnimatedTerminalProps) {
+  const baseFps = 1000 / frameLengthMs;
   const [currentFrame, setCurrentFrame] = useState(16);
   const [animationManager] = useState(
     () =>
       new AnimationManager(() => {
         setCurrentFrame((currentFrame) => (currentFrame + 1) % frames.length);
-      }),
+      }, baseFps),
   );
 
   useEffect(() => {
@@ -104,10 +107,10 @@ export default function AnimatedTerminal({
       if (codeInProgress.length !== KONAMI_CODE.length) {
         return;
       }
-      if (animationManager.frameTime === 1000 / 30) {
+      if (animationManager.frameTime === 1000 / baseFps) {
         animationManager.updateFPS(240);
       } else {
-        animationManager.updateFPS(30);
+        animationManager.updateFPS(baseFps);
       }
       codeInProgress.length = 0;
     };
@@ -123,7 +126,7 @@ export default function AnimatedTerminal({
       window.removeEventListener("blur", handleBlur);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [animationManager, frames.length]);
+  }, [animationManager, frames.length, baseFps]);
 
   return (
     <Terminal
