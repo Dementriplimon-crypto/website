@@ -27,7 +27,7 @@ export function processGitHubLinks(children: React.ReactNode): React.ReactNode {
   }
 
   if (Array.isArray(children)) {
-    return children.map((child, index) => processGitHubLinks(child));
+    return children.map((child) => processGitHubLinks(child));
   }
 
   if (isReactElement(children)) {

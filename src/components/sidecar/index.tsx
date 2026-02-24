@@ -3,7 +3,7 @@
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import classNames from "classnames";
-import { H6, P } from "../text";
+import { P } from "../text";
 import s from "./Sidecar.module.css";
 import { useStore } from "@/lib/use-store";
 

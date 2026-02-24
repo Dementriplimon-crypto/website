@@ -140,7 +140,7 @@ function Node({ path, node, onLinkNodeClicked, activeItemRef }: NodeProps) {
         <LinkNode
           path={path}
           node={node}
-          onClick={(e) => {
+          onClick={() => {
             onLinkNodeClicked?.();
           }}
         />

@@ -80,7 +80,7 @@ export default function CustomMDX({ content }: CustomMDXProps) {
             return <code {...props} />;
           },
           pre: (props) => {
-            const { children, ...rest } = props;
+            const { children } = props;
             if (isReactElement(children)) {
               const className = children.props?.className;
               const chart = children.props?.children;
@@ -97,7 +97,7 @@ export default function CustomMDX({ content }: CustomMDXProps) {
           },
           blockquote: Blockquote,
           img: (props) => (
-            // eslint-disable-next-line @next/next/no-img-element
+            // biome-ignore lint/performance/noImgElement: MDX images are user-authored and may not include dimensions required by next/image.
             <img className={s.image} src={props.src} alt={props.alt} />
           ),
           VTSequence,

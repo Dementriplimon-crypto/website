@@ -87,7 +87,7 @@ function parseSequence(sequence: string | string[]) {
 
   return sequenceArray.map((value) => {
     // Pn is a param with name n.
-    const param = value.match(/\P(\w)/)?.[1];
+    const param = value.match(/P(\w)/)?.[1];
     if (param) return { value: param };
 
     // Use special lookup if it exists
