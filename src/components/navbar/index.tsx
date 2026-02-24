@@ -98,12 +98,7 @@ export default function Navbar({
               {links.map((link) => {
                 return (
                   <li key={link.text}>
-                    <Link
-                      className={classNames({
-                        [s.active]: pathname === link.href,
-                      })}
-                      {...link}
-                    />
+                    <Link {...link} />
                   </li>
                 );
               })}
