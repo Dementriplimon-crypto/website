@@ -44,17 +44,15 @@ async function loadDocsRouteData(path: string[]): Promise<{
   breadcrumbs: Breadcrumb[];
 }> {
   const activePageSlug = toActivePageSlug(path);
-  const navTreeData = await loadDocsNavTreeData(DOCS_DIRECTORY, activePageSlug);
-
-  let docsPageData: DocsPageData;
-  try {
-    docsPageData = await loadDocsPage(DOCS_DIRECTORY, activePageSlug);
-  } catch (err) {
-    if (isErrorWithCode(err) && err.code === "ENOENT") {
-      notFound();
-    }
-    throw err;
-  }
+  const [navTreeData, docsPageData] = await Promise.all([
+    loadDocsNavTreeData(DOCS_DIRECTORY, activePageSlug),
+    loadDocsPage(DOCS_DIRECTORY, activePageSlug).catch((err: unknown) => {
+      if (isErrorWithCode(err) && err.code === "ENOENT") {
+        notFound();
+      }
+      throw err;
+    }),
+  ]);
 
   const breadcrumbs = navTreeToBreadcrumbs(
     "Ghostty Docs",
