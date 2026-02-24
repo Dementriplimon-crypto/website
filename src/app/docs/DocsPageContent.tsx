@@ -15,6 +15,7 @@ interface DocsPageContentProps {
   breadcrumbs: Breadcrumb[];
 }
 
+// DocsPageContent renders the shared docs layout with nav, content, and sidecar.
 export default function DocsPageContent({
   navTreeData,
   docsPageData: {

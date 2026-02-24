@@ -11,28 +11,47 @@ import {
 import { docsMetadataTitle } from "@/lib/docs-metadata-title";
 import { loadDocsNavTreeData } from "@/lib/fetch-nav";
 import { navTreeToBreadcrumbs } from "@/lib/nav-tree-to-breadcrumbs";
-import DocsPageContent from "../docs-page-content";
-
-export const dynamic = "force-static";
-export const dynamicParams = false;
+import DocsPageContent from "../DocsPageContent";
 
 interface DocsRouteProps {
-  params: Promise<{ path: string[] }>;
+  params: Promise<{ path?: string[] }>;
 }
 
+// Disable runtime fallback routing so unknown docs paths become 404s.
+export const dynamicParams = false;
+
+// normalizePathSegments converts an optional catch-all param into a concrete array.
+function normalizePathSegments(path: string[] | undefined): string[] {
+  return path ?? [];
+}
+
+// toActivePageSlug maps an optional catch-all route to the docs slug used by loaders.
+function toActivePageSlug(path: string[]): string {
+  return path.length === 0 ? "index" : path.join("/");
+}
+
+// isErrorWithCode narrows unknown errors so filesystem codes can be checked safely.
+function isErrorWithCode(err: unknown): err is Error & { code: unknown } {
+  return err instanceof Error && typeof err === "object" && "code" in err;
+}
+
+// loadDocsRouteData loads all data needed to render a docs page and its metadata.
 async function loadDocsRouteData(path: string[]): Promise<{
   navTreeData: NavTreeNode[];
   docsPageData: DocsPageData;
   breadcrumbs: Breadcrumb[];
 }> {
-  const activePageSlug = path.join("/");
+  const activePageSlug = toActivePageSlug(path);
   const navTreeData = await loadDocsNavTreeData(DOCS_DIRECTORY, activePageSlug);
 
   let docsPageData: DocsPageData;
   try {
     docsPageData = await loadDocsPage(DOCS_DIRECTORY, activePageSlug);
-  } catch {
-    notFound();
+  } catch (err) {
+    if (isErrorWithCode(err) && err.code === "ENOENT") {
+      notFound();
+    }
+    throw err;
   }
 
   const breadcrumbs = navTreeToBreadcrumbs(
@@ -41,23 +60,30 @@ async function loadDocsRouteData(path: string[]): Promise<{
     navTreeData,
     activePageSlug,
   );
+
   return { navTreeData, docsPageData, breadcrumbs };
 }
 
+// generateStaticParams pre-renders the docs index and every nested docs slug.
 export async function generateStaticParams(): Promise<
   Array<{ path: string[] }>
 > {
   const docsPageSlugs = await loadAllDocsPageSlugs(DOCS_DIRECTORY);
-  return docsPageSlugs
+  const docsPagePaths = docsPageSlugs
     .filter((slug) => slug !== "index")
     .map((slug) => ({ path: slug.split("/") }));
+
+  return [{ path: [] }, ...docsPagePaths];
 }
 
+// generateMetadata builds SEO metadata from the resolved docs page and breadcrumbs.
 export async function generateMetadata({
   params,
 }: DocsRouteProps): Promise<Metadata> {
   const { path } = await params;
-  const { docsPageData, breadcrumbs } = await loadDocsRouteData(path);
+  const { docsPageData, breadcrumbs } = await loadDocsRouteData(
+    normalizePathSegments(path),
+  );
 
   return {
     title: docsMetadataTitle(breadcrumbs),
@@ -65,10 +91,12 @@ export async function generateMetadata({
   };
 }
 
+// DocsPage renders both /docs and /docs/* routes via a single optional catch-all route.
 export default async function DocsPage({ params }: DocsRouteProps) {
   const { path } = await params;
-  const { navTreeData, docsPageData, breadcrumbs } =
-    await loadDocsRouteData(path);
+  const { navTreeData, docsPageData, breadcrumbs } = await loadDocsRouteData(
+    normalizePathSegments(path),
+  );
 
   return (
     <DocsPageContent
