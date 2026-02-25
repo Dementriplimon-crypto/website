@@ -78,10 +78,8 @@ export default function Navbar({
 
   // Close the mobile menu when navigation changes the pathname.
   useEffect(() => {
-    if (mobileMenuOpen) {
-      setMobileMenuOpen(false);
-    }
-  }, [pathname, mobileMenuOpen]);
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     <nav className={classNames(s.navbar, className)}>
