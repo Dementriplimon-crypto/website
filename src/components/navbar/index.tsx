@@ -121,9 +121,8 @@ export default function Navbar({
       </GridContainer>
       <div
         ref={mobileContentRef}
-        className={classNames(s.mobileContent, {
-          [s.mobileMenuOpen]: mobileMenuOpen,
-        })}
+        className={s.mobileContent}
+        data-open={mobileMenuOpen}
       >
         <NavTree
           className={s.navTree}

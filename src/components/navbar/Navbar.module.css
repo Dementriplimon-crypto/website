@@ -48,7 +48,7 @@
   & .mobileContent {
     display: none;
     overflow: scroll;
-    &.mobileMenuOpen {
+    &[data-open=true] {
       display: block;
     }
     background: var(--gray-0);
