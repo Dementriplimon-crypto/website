@@ -4,10 +4,10 @@ import ScrollToTopButton from "@/components/scroll-to-top";
 import Sidecar from "@/components/sidecar";
 import { H1, P } from "@/components/text";
 import { DOCS_PAGES_ROOT_PATH, GITHUB_REPO_URL } from "@/lib/docs/config";
+import customMdxStyles from "@/lib/docs/docs-mdx.module.css";
 import type { DocsPageData } from "@/lib/docs/page";
 import { Pencil } from "lucide-react";
 import s from "./DocsPage.module.css";
-import customMdxStyles from "@/components/custom-mdx/CustomMDX.module.css";
 
 interface DocsPageContentProps {
   navTreeData: NavTreeNode[];
